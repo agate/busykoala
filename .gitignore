@@ -2,3 +2,6 @@
 /server/log/*.log
 /server/tmp
 /server/vendor/.bundle
+
+.DS_Store
+.sass-cache

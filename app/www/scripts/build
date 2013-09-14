@@ -1,0 +1,12 @@
+#!/bin/bash
+
+ROOT_DIR=`dirname $0`/..
+
+echo "Compiling JS..."
+coffee -o $ROOT_DIR/target/js -c $ROOT_DIR/src/coffee/* 
+
+echo "Compiling CSS..."
+sass --update $ROOT_DIR/src/sass:$ROOT_DIR/target/css
+
+echo "Compiling Pages..."
+jade --pretty -o $ROOT_DIR/target/views $ROOT_DIR/src/views > /dev/null
