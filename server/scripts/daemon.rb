@@ -37,6 +37,11 @@ module Busykoala
     end
 
     class Fetcher
+      INPUT_REGISTERS_OFFSET = 20
+      TIMEOUT = 0.1
+
+      attr_reader :devices
+
       def self.run
         begin
           client = ModBus::RTUClient.new(PORT, BAUD, :parity => SerialPort::EVEN)
@@ -51,10 +56,6 @@ module Busykoala
           client.close
         end
       end
-
-      attr_reader :devices
-      INPUT_REGISTERS_OFFSET = 20
-      TIMEOUT = 0.1
 
       def initialize(client)
         # @config = Busykoala::Config
