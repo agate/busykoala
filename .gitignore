@@ -1,0 +1,4 @@
+/server/.bundle
+/server/log/*.log
+/server/tmp
+/server/vendor/.bundle
