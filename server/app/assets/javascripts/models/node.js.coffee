@@ -1,7 +1,7 @@
-Busykoala.Node = Ember.Object.extend
+Busykoala.Node = Ember.Object.extend({})
 
 Busykoala.Node.reopenClass
-  nodeType: {
+  nodeType:
     1: 'lamp'
     2: 'switcher'
     3: 'fan'
@@ -9,4 +9,9 @@ Busykoala.Node.reopenClass
     5: 'scrollbar'
     6: 'beeper'
     7: 'pattern'
-  }
+
+  loadAll: ->
+    $.getJSON("/devices")
+
+  loadById: (id)->
+    @getProperty('allNodes').findProperty('id', id)

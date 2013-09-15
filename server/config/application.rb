@@ -28,3 +28,5 @@ module Busykoala
     config.handlebars.templates_root = 'templates'
   end
 end
+
+Tilt::CoffeeScriptTemplate.default_bare = true

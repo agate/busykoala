@@ -1,5 +1,4 @@
-Busykoala.NodesRoute = Ember.Route.extend
-  model: ->
-    Busykoala.Node.loadAll()
-
-Busykoala.NodesIndexRoute = Ember.Route.extend
+# Busykoala.NodeRoute = Ember.Route.extend
+#   model: (params)->
+#     Busykoala.Node.loadAll().then
+#   setupController: (controller)->
