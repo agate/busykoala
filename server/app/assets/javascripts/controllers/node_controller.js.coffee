@@ -1,2 +1,2 @@
-Busykoala.NodeController = Ember.ObjectController.extend
-  isAvailable: null
+# Busykoala.NodeController = Ember.ObjectController.extend
+#   isAvailable: null
