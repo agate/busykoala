@@ -1,0 +1,31 @@
+= form_tag actions_path, :method => :post do
+  %ul.devices
+    - @devices.each do |d|
+      - parsed_id = d['id'].split(':')
+      %li.device
+        %h3= Device::MAPPING[d["type"]]
+        %p
+          - if [1, 2].include? d["type"]
+            Status: #{d["value"] == 0 ? "OFF" : "ON"}
+          - else
+            - if d["type"] == 4
+              Status: #{d["value"] / 16.0 }
+            - else d["type"] == 4
+              Status: #{d["value"]}
+
+        - if Device::BIT_TARGET_INDEXES.include? d["type"]
+          %p
+            %label
+              OFF
+              %input{ :type => 'radio', :name => "items[#{d['id']}]", :value => 0, :checked => d['value'] == 0 }
+            %label
+              ON
+              %input{ :type => 'radio', :name => "items[#{d['id']}]", :value => 1, :checked => d['value'] != 0 }
+
+        - elsif Device::VAL_TARGET_INDEXES.include? d["type"]
+          %p
+            %label
+              Num
+              %input{ :type => 'range', :name => "items[#{d['id']}]", :value => d['value'] }
+
+  %input{ :type => :submit }

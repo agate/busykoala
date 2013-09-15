@@ -57,6 +57,8 @@ GEM
     erubis (2.7.0)
     eventmachine (1.0.3)
     execjs (2.0.1)
+    haml (4.0.3)
+      tilt
     handlebars-source (1.0.12)
     hike (1.2.3)
     i18n (0.6.5)
@@ -128,6 +130,7 @@ PLATFORMS
 DEPENDENCIES
   coffee-rails (~> 4.0.0)
   ember-rails
+  haml
   jbuilder (~> 1.2)
   jquery-rails
   rails (= 4.0.0)
