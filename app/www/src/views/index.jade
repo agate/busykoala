@@ -4,9 +4,10 @@ html
     meta(name='format-detection', content='telephone=no')
     //- meta(name='viewport', content='user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi')
     meta(name="viewport", content="width=device-width, initial-scale=1")
+    title Busykoala
+
     link(rel='stylesheet', type='text/css', href='lib/jquerymobile/jquery.mobile-1.3.2.min.css')
     //- link(rel='stylesheet', type='text/css', href='target/css/index.css')
-    title Busykoala
 
   body
     div#page-main(data-role='page')
@@ -16,19 +17,19 @@ html
       div(data-role='content')
         ul.devices(data-role='listview', data-inset='true')
           li
-            a(href='#detail')
+            a(href='#page-detail')
               img(src='res/images/nopic.png')
               h2 LEDs
               p 4 * 4 LED device
 
           li
-            a(href='#detail')
+            a(href='#page-detail')
               img(src='res/images/nopic.png')
               h2 Fan
               p Room1 Fan
 
           li
-            a(href='#detail')
+            a(href='#page-detail')
               img(src='res/images/nopic.png')
               h2 Fan
               p Room1 Fan
@@ -48,7 +49,7 @@ html
         h1 Detail for LEDs
 
       div(data-role='content')
-        img#leds
+        img#leds(src='res/images/nopic.png', height="150px")
 
         div(data-role='fieldcontain')
           label(for='pattern') 模式
@@ -75,7 +76,7 @@ html
       div(data-role='content')
         div(data-role='fieldcontain')
           label(for='settings-ip') SERVER IP
-          input.ui-input-text.ui-body-c#settings-ip(type='text', placeholder='IP')
+          input.ui-input-text.ui-body-c#settings-ip(type='text', placeholder='IP', value="192.168.1.103")
 
       div(data-role="footer", data-position="fixed")
         div(data-role="navbar", data-iconpos="bottom")
@@ -87,11 +88,16 @@ html
             li
               a.ui-btn-active(href="#page-settings", data-icon="gear", data-transition="flip") Settings
 
+
     script(type='text/javascript', src='cordova.js')
     script(type='text/javascript', src='lib/jquery/jquery.min.js')
     script(type='text/javascript', src='lib/jquerymobile/jquery.mobile-1.3.2.min.js')
     script(type='text/javascript', src='target/js/index.js')
     script(type='text/javascript').
-      document.addEventListener("deviceready", function () {
-        new App();
-      }, false);
+      $(function () {
+        document.addEventListener("deviceready", function () {
+          setTimeout(function () {
+            new App();
+          }, 1000)
+        }, false);
+      });

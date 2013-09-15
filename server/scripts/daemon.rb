@@ -52,9 +52,8 @@ module Busykoala
             fetcher.fetch
             fetcher.normalize
             Device.update_all(fetcher.devices)
-            puts fetcher.devices.inspect
-            break
-            sleep 2
+            # puts fetcher.devices.inspect
+            sleep 1
           end
         ensure
           client.close
