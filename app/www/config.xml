@@ -17,4 +17,7 @@
     <feature name="Accelerometer">
         <param name="android-package" value="org.apache.cordova.AccelListener" />
     </feature>
+    <feature name="Media">
+        <param name="android-package" value="org.apache.cordova.AudioHandler" />
+    </feature>
 </widget>
