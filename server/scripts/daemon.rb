@@ -52,9 +52,10 @@ module Busykoala
             fetcher.fetch
             fetcher.normalize
             Device.update_all(fetcher.devices)
+            puts fetcher.devices.inspect
             break
+            sleep 2
           end
-          puts fetcher.devices.inspect
         ensure
           client.close
         end
@@ -68,6 +69,16 @@ module Busykoala
       end
 
       def action
+        Action.all.each do |action|
+          address, uuid, role, index = action["id"].split(":")
+          value = action["value"]
+
+          @client.with_slave(address.to_i) do |slave|
+            slave.write_multiple_registers(index.to_i * 2 + 1, [ value ])
+          end
+        end
+
+        Action.clear!
       end
 
       def detect
@@ -126,7 +137,7 @@ module Busykoala
         @raw.each do |raw|
           raw[:info_input_register].each_with_index do |device, i|
             @devices << {
-              :id    => "#{raw[:uuid]}:source:#{i}",
+              :id    => "#{raw[:address]}:#{raw[:uuid]}:source:#{i}",
               :type  => device[:type],
               :value => device[:value]
             }
@@ -134,7 +145,7 @@ module Busykoala
 
           raw[:info_holdings].each_with_index do |device, i|
             @devices << {
-              :id    => "#{raw[:uuid]}:target:#{i}",
+              :id    => "#{raw[:address]}:#{raw[:uuid]}:target:#{i}",
               :type  => device[:type],
               :value => device[:value]
             }
