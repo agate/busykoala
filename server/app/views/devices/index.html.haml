@@ -1,7 +1,8 @@
 = form_tag actions_path, :method => :post do
   %ul.devices
     - @devices.each do |d|
-      - parsed_id = d['id'].split(':')
+      - address, uuid, role, index = d["id"].split(":")
+
       %li.device
         %h3= Device::MAPPING[d["type"]]
         %p
@@ -27,5 +28,16 @@
             %label
               Num
               %input{ :type => 'range', :name => "items[#{d['id']}]", :value => d['value'] }
+
+
+        - if role == "source"
+          %p
+            %label
+              Targets
+              %select{ :name => "relationships[#{d['id']}]" }
+                %option NOTHING
+                - @devices.each do |d2|
+                  - if d2["id"].split(":")[2] == 'target'
+                    %option{ :value => d2['id'] }= Device::MAPPING[d2["type"]]
 
   %input{ :type => :submit }

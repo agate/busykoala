@@ -12,6 +12,10 @@ class ActionsController < ApplicationController
     else
     end
 
+    if params[:relationships]
+      Relationship.update(params[:relationships])
+    end
+
     redirect_to devices_path
   end
 

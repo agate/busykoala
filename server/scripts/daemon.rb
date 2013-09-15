@@ -47,10 +47,10 @@ module Busykoala
           client = ModBus::RTUClient.new(PORT, BAUD, :parity => SerialPort::EVEN)
           while true
             fetcher = self.new(client)
-            fetcher.action
             fetcher.detect
             fetcher.fetch
             fetcher.normalize
+            fetcher.action
             Device.update_all(fetcher.devices)
             # puts fetcher.devices.inspect
             sleep 1
@@ -68,7 +68,26 @@ module Busykoala
       end
 
       def action
-        Action.all.each do |action|
+        actions = Action.all
+
+        Relationship.all.each_pair do |id, target|
+          @devices.each do |d|
+            if d[:id] == id
+              @devices.each do |d2|
+                if d2[:id] == target
+                  actions << {
+                    "id" => target,
+                    "value" => d[:value]
+                  }
+                  break
+                end
+              end
+              break
+            end
+          end
+        end
+
+        actions.each do |action|
           address, uuid, role, index = action["id"].split(":")
           value = action["value"]
 
