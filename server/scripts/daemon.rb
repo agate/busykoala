@@ -101,6 +101,7 @@ module Busykoala
 
       def detect
         DEV_NUM.times do |i|
+          # puts i
           index = i+1
           device = nil
 
@@ -111,6 +112,7 @@ module Busykoala
               end
             end
           rescue Busykoala::Daemon::TimeoutException => err
+            # puts err.inspect
           end
 
           @raw << device if device
