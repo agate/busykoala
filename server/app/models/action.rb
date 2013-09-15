@@ -1,4 +1,4 @@
-class Device
+class Action
   STORAGE = "#{Rails.root}/tmp/actions.json"
 
   def self.all
