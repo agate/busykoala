@@ -2,7 +2,7 @@ class Device
   STORAGE = "#{Rails.root}/tmp/devices.json"
 
   def self.all
-    JSON.parse(File.read(STORAGE))
+    JSON.parse(File.read(STORAGE)) rescue []
   end
 
   def self.find(id)

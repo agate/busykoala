@@ -47,10 +47,14 @@ module Busykoala
           client = ModBus::RTUClient.new(PORT, BAUD, :parity => SerialPort::EVEN)
           while true
             fetcher = self.new(client)
+            fetcher.action
             fetcher.detect
             fetcher.fetch
+            fetcher.normalize
             Device.update_all(fetcher.devices)
+            puts fetcher.devices.inspect
             break
+            sleep 2
           end
         ensure
           client.close
@@ -60,7 +64,21 @@ module Busykoala
       def initialize(client)
         # @config = Busykoala::Config
         @client = client
+        @raw = []
         @devices = []
+      end
+
+      def action
+        Action.all.each do |action|
+          address, uuid, role, index = action["id"].split(":")
+          value = action["value"]
+
+          @client.with_slave(address.to_i) do |slave|
+            slave.write_multiple_registers(index.to_i * 2 + 1, [ value ])
+          end
+        end
+
+        Action.clear!
       end
 
       def detect
@@ -77,14 +95,14 @@ module Busykoala
           rescue Busykoala::Daemon::TimeoutException => err
           end
 
-          @devices << device if device
+          @raw << device if device
         end
 
-        @devices.map! { |d| parse_device_info(d) }
+        @raw.map! { |d| parse_device_info(d) }
       end
 
       def fetch
-        @devices.each do |device|
+        @raw.each do |device|
           @client.with_slave(device[:address]) do |slave|
             device[:num_discrete_inputs].times do |i|
               device[:info_discrete_inputs] << slave.read_discrete_inputs(i, 1).first
@@ -95,12 +113,42 @@ module Busykoala
             end
 
             device[:num_input_register].times do |i|
-              device[:info_input_register] << slave.read_input_registers(INPUT_REGISTERS_OFFSET + i, 1).first
+              index = i * 2
+              info = slave.read_input_registers(INPUT_REGISTERS_OFFSET + index, 2)
+              device[:info_input_register] << {
+                :type => info[0],
+                :value => info[1]
+              }
             end
 
             device[:num_holdings].times do |i|
-              device[:info_holdings] << slave.read_holding_registers(i, 1).first
+              index = i * 2
+              info = slave.read_holding_registers(index, 2)
+              device[:info_holdings] << {
+                :type => info[0],
+                :value => info[1]
+              }
             end
+          end
+        end
+      end
+
+      def normalize
+        @raw.each do |raw|
+          raw[:info_input_register].each_with_index do |device, i|
+            @devices << {
+              :id    => "#{raw[:address]}:#{raw[:uuid]}:source:#{i}",
+              :type  => device[:type],
+              :value => device[:value]
+            }
+          end
+
+          raw[:info_holdings].each_with_index do |device, i|
+            @devices << {
+              :id    => "#{raw[:address]}:#{raw[:uuid]}:target:#{i}",
+              :type  => device[:type],
+              :value => device[:value]
+            }
           end
         end
       end
