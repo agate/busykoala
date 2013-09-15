@@ -1,0 +1,10 @@
+//= require handlebars
+//= require ember
+//= require ./busykoala/app
+//= require_tree ./busykoala/models
+//= require_tree ./busykoala/controllers
+//= require_tree ./busykoala/views
+//= require_tree ./busykoala/helpers
+//= require_tree ./busykoala/templates
+//= require_tree ./busykoala/routes
+//= require ./busykoala/router
